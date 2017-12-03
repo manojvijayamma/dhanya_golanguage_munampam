@@ -1,0 +1,64 @@
+package models
+
+import (
+	
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/astaxie/beego/orm"
+	"fmt"
+	
+)
+
+var (
+	LinksList []*LinksMaster
+)
+
+func init() {
+	 orm.RegisterModel(new(LinksMaster))
+}
+
+type LinksMaster struct {
+	//Id       int `orm:"auto"`
+	//Username string `orm:"size(100)"`
+	//Password string `orm:"size(100)"`
+	Id       int `orm:"auto"`
+	Title  string `orm:"size(100)"`
+	Status string
+	
+}
+
+
+func AddLinks(u LinksMaster) (error) {
+	o := orm.NewOrm()
+   // o.Using("default") // Using default, you can use other database
+	fmt.Println(u)
+
+    if u.Id>0 {
+    	_, err := o.Update(&u)
+    	return err
+    }else{
+    	/*
+    	id, err := o.Insert(&user) // return last inserted id
+    	*/
+    	
+		_, err := o.Insert(&u)
+		return err
+	}	
+    
+
+}
+
+
+func GetAllLinks() [] *LinksMaster {
+	/*
+	qs, _ := o.QueryTable(new(Ticket)).Filter("EventId", 2).All(&tickets)
+	*/
+	o := orm.NewOrm()	
+	qs,_:=o.QueryTable(new(LinksMaster)).All(&LinksList)	
+	fmt.Println(qs)
+	
+	return LinksList
+	
+}
+
+
+
